@@ -27,9 +27,10 @@ function App() {
 
   const [mode, setMode] = useState(MODES.SESSION);
   const [clock, setClock] = useState(DEFAULT_SESSION_LENGTH * 60);
-  const [playing, setPlaying] = useState(false);
 
   const timerRef = useRef();
+  const playing = !!timerRef.current;
+
   const audioRef = useRef();
   const modeRef = useRef();
   modeRef.current = mode;
@@ -38,11 +39,11 @@ function App() {
 
   const playBeep = () => {
     audioRef.current?.play();
-    setTimeout(() => audioRef.current?.pause(), 1000);
+    setTimeout(() => audioRef.current?.pause(), 1500);
   };
 
   const togglePlay = () => {
-    if (playing) {
+    if (timerRef.current) {
       clearInterval(timerRef.current);
     } else {
       timerRef.current = setInterval(() => {
@@ -60,16 +61,15 @@ function App() {
         }
       }, 1000);
     }
-
-    setPlaying((pPlaying) => !pPlaying);
   };
 
   const handleReset = () => {
     setBreakLength(DEFAULT_BREAK_LENGTH);
     setSessionLength(DEFAULT_SESSION_LENGTH);
     setClock(DEFAULT_SESSION_LENGTH * 60);
-    setPlaying(false);
+    playing && togglePlay();
     setMode(MODES.SESSION);
+    audioRef.current?.pause();
   };
 
   const afterChangeLength = (v, inputMode) => {
