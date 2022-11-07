@@ -47,7 +47,7 @@ function App() {
     } else {
       timerRef.current = setInterval(() => {
         const newValue = clockRef.current - 1;
-        if (newValue === 0) {
+        if (newValue < 0) {
           playBeep();
           const newMode =
             modeRef.current === MODES.SESSION ? MODES.BREAK : MODES.SESSION;
@@ -67,7 +67,7 @@ function App() {
   const handleReset = () => {
     setBreakLength(DEFAULT_BREAK_LENGTH);
     setSessionLength(DEFAULT_SESSION_LENGTH);
-    setClock(DEFAULT_SESSION_LENGTH);
+    setClock(DEFAULT_SESSION_LENGTH * 60);
     setPlaying(false);
     setMode(MODES.SESSION);
   };
@@ -137,7 +137,7 @@ function App() {
             >
               -
             </button>
-            <div>{sessionLength}</div>
+            <div id="session-length">{sessionLength}</div>
             <button
               id="session-increment"
               onClick={() => {
@@ -161,9 +161,7 @@ function App() {
       </div>
 
       <div>
-        <button id="start_stop" onClick={() => setClock(5)}>
-          Quick
-        </button>
+        <button onClick={() => setClock(5)}>Quick</button>
         <button id="start_stop" onClick={togglePlay}>
           Play/Pause
         </button>
